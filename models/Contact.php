@@ -43,20 +43,7 @@ class Contact extends Model
 
         $query = "SELECT * FROM $this->table ORDER BY id ASC LIMIT ".self::COUNT." OFFSET $offset";
 
-        $model = $this->db->query($query);
-
-        $model->setFetchMode(PDO::FETCH_OBJ);
-
-        $array = [];
-
-        while ($row = $model->fetch()) {
-            $row->user = !empty($row->user_id) ? $this->findOne($row->user_id, 'users') : null;
-            $row->address = !empty($row->address_id) ? $this->findOne($row->address_id, 'address') : null;
-            $row->group = !empty($row->group_id) ? $this->findOne($row->group_id,'groups') : null;
-            $array[] = $row;
-        }
-
-        return $array;
+        return $this->getArrayByQuery($query);
     }
 
     /**
@@ -116,5 +103,38 @@ class Contact extends Model
     public function getContactsCount()
     {
         return $this->getCount($this->table);
+    }
+
+    /**
+     * Все контакты без лимита и пагинации
+     * @return array
+     */
+    public function getAllContacts()
+    {
+        $query = "SELECT * FROM $this->table ORDER BY id DESC";
+
+        return $this->getArrayByQuery($query);
+    }
+
+    /**
+     * @param $query (sql)
+     * @return array
+     */
+    private function getArrayByQuery($query)
+    {
+        $model = $this->db->query($query);
+
+        $model->setFetchMode(PDO::FETCH_OBJ);
+
+        $array = [];
+
+        while ($row = $model->fetch()) {
+            $row->user = !empty($row->user_id) ? $this->findOne($row->user_id, 'users') : null;
+            $row->address = !empty($row->address_id) ? $this->findOne($row->address_id, 'address') : null;
+            $row->group = !empty($row->group_id) ? $this->findOne($row->group_id,'groups') : null;
+            $array[] = $row;
+        }
+
+        return $array;
     }
 }

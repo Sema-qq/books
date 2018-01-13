@@ -177,10 +177,7 @@ class AddressBook extends Table
     {
         while (true){
             //только буквы и цифры
-            if (preg_match('([^a-zA-Z0-9]+)', $fio)){
-                echo "Must be only numbers and letters! Please try again enter F.I.O.: ";
-                $fio = rtrim(fgets(STDIN));
-            } elseif (strlen($fio) < 3){
+            if (strlen($fio) < 3){
                 echo "Length 3 characters! Please try again enter F.I.O.: ";
                 $fio = rtrim(fgets(STDIN));
             } else { return $fio; }

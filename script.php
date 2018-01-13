@@ -1,4 +1,5 @@
 <?php
+
 #запуск скрипта
 $onject = new AddressBook();
 $onject->run();
@@ -58,7 +59,10 @@ class AddressBook
             } elseif (rtrim(strtolower($command)) == 'show') {
                 echo "Insert number contact (1 or 2): ";
                 $this->show(rtrim(fgets(STDIN)));
-            }  elseif (rtrim(strtolower($command)) == 'show all'){
+            }  elseif (rtrim(strtolower($command)) == 'edit') {
+                echo "Insert number contact (1 or 2): ";
+                $this->show(rtrim(fgets(STDIN)));
+            } elseif (rtrim(strtolower($command)) == 'show all'){
                 $this->showAll();
             } elseif (rtrim(strtolower($command)) == 'help'){
                 $this->help();
@@ -100,17 +104,17 @@ class AddressBook
     {
         if (empty($this->contact1)){
             $this->contact1 = new Contacts();
-            echo "Please insert your F.I.O.: ";
-            $this->contact1->name = rtrim(fgets(STDIN));
-            echo "Please insert your phone: ";
-            $this->contact1->phone = rtrim(fgets(STDIN));
+            echo "Please insert F.I.O.: ";
+            $this->contact1->fio = rtrim(fgets(STDIN));
+            echo "Please insert phone: ";
+            $this->contact1->phone = $this->validatePhone(rtrim(fgets(STDIN)));
             echo "Contact successfully create\n";
         } elseif (empty($this->contact2)){
             $this->contact2 = new Contacts();
-            echo "Please insert your F.I.O.: ";
-            $this->contact2->name = rtrim(fgets(STDIN));
-            echo "Please insert your phone: ";
-            $this->contact2->phone = rtrim(fgets(STDIN));
+            echo "Please insert F.I.O.: ";
+            $this->contact2->fio = rtrim(fgets(STDIN));
+            echo "Please insert phone: ";
+            $this->contact2->phone = $this->validatePhone(rtrim(fgets(STDIN)));
             echo "Contact successfully create\n";
         } else {
             echo "All contacts are already created.\n";
@@ -127,7 +131,42 @@ class AddressBook
             echo "==============================================\n";
             echo "Contact 1:\n";
             echo "==============================================\n";
-            echo "F.I.O:        ".$this->contact1->name."\n";
+            echo "F.I.O:        ".$this->contact1->fio."\n";
+            echo "Phone:        ".$this->contact1->phone."\n";
+            echo "==============================================\n";
+            echo "Please insert new F.I.O.: ";
+            $this->contact1->fio = rtrim(fgets(STDIN));
+            echo "Please insert new phone: ";
+            $this->contact1->phone = $this->validatePhone(rtrim(fgets(STDIN)));
+            echo "Contact successfully edited\n";
+        } else if ($number == '2' && !empty($this->contact2)){
+            echo "==============================================\n";
+            echo "Contact 2:\n";
+            echo "==============================================\n";
+            echo "F.I.O:        ".$this->contact2->fio."\n";
+            echo "Phone:        ".$this->contact2->phone."\n";
+            echo "==============================================\n";
+            echo "Please insert new F.I.O.: ";
+            $this->contact2->fio = rtrim(fgets(STDIN));
+            echo "Please insert new phone: ";
+            $this->contact2->phone = $this->validatePhone(rtrim(fgets(STDIN)));
+            echo "Contact successfully edited\n";
+        } else {
+            echo "Contact not found\n";
+        }
+    }
+
+    /**
+     * Редактирование одного контакта
+     * @param string $number
+     */
+    private function edit($number)
+    {
+        if ($number == '1' && !empty($this->contact1)){
+            echo "==============================================\n";
+            echo "Contact 1:\n";
+            echo "==============================================\n";
+            echo "F.I.O:        ".$this->contact1->fio."\n";
             echo "Phone:        ".$this->contact1->phone."\n";
             echo "==============================================\n";
             echo "\n";
@@ -135,7 +174,7 @@ class AddressBook
             echo "==============================================\n";
             echo "Contact 2:\n";
             echo "==============================================\n";
-            echo "F.I.O:        ".$this->contact2->name."\n";
+            echo "F.I.O:        ".$this->contact2->fio."\n";
             echo "Phone:        ".$this->contact2->phone."\n";
             echo "==============================================\n";
             echo "\n";
@@ -153,7 +192,7 @@ class AddressBook
             echo "==============================================\n";
             echo "Contact 1:\n";
             echo "==============================================\n";
-            echo "F.I.O:        ".$this->contact1->name."\n";
+            echo "F.I.O:        ".$this->contact1->fio."\n";
             echo "Phone:        ".$this->contact1->phone."\n";
             echo "==============================================\n";
             echo "\n";
@@ -161,7 +200,7 @@ class AddressBook
             echo "==============================================\n";
             echo "Contact 2:\n";
             echo "==============================================\n";
-            echo "F.I.O:        ".$this->contact2->name."\n";
+            echo "F.I.O:        ".$this->contact2->fio."\n";
             echo "Phone:        ".$this->contact2->phone."\n";
             echo "==============================================\n";
             echo "\n";
@@ -186,6 +225,25 @@ class AddressBook
             echo "Contact not found\n";
         }
     }
+
+    /**
+     * Валидируем телефон
+     * @param string $phone
+     * @return string
+     */
+    private function validatePhone($phone)
+    {
+        while (true){
+            //только цифры и не меньше 11вуд
+            if (preg_match('([^0-9]+)', $phone)){
+                echo "Must be only numbers! Please try again enter phone: ";
+                $phone = rtrim(fgets(STDIN));
+            } elseif (strlen($phone) < 11){
+                echo "Length 11 characters! Please try again enter phone: ";
+                $phone = rtrim(fgets(STDIN));
+            } else { return $phone; }
+        }
+    }
 }
 
 /**
@@ -197,7 +255,7 @@ class Contacts
     /**
      * @var
      */
-    public $name;
+    public $fio;
 
     /**
      * @var

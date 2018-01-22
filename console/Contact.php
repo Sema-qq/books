@@ -19,5 +19,18 @@ class Contact
      * @var
      */
     public $phone;
+
+
+    /**
+     * @return array
+     */
+    public function getAttributeLabels()
+    {
+        return [
+            'ID' => $this->id,
+            'F.I.O.' => $this->fio,
+            'PHONE' => $this->phone
+        ];
+    }
 }
 

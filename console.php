@@ -27,9 +27,43 @@ function __autoload($class_name)
 }
 
 #запуск скрипта
-
-$onject = new AddressBook();
-$onject->run();
+$object = new AddressBook();
+#сначала выведем справку
+$object->help();
+#затем запустим (почти)бесконечный цикл
+while (true){
+    echo "Please enter command: ";
+    $command = fgets(STDIN);
+    if (rtrim(strtolower($command)) == 'add'){
+        echo "Please enter F.I.O.: ";
+        $fio = Validator::validateFio(rtrim(fgets(STDIN)));
+        echo "Please enter phone: ";
+        $phone = Validator::validatePhone(rtrim(fgets(STDIN)));
+        $result = $object->add($fio, $phone);
+        echo $result ? "Contact $result successfully create!\n\n" : "Failure!";
+    } elseif (rtrim(strtolower($command)) == 'show') {
+        echo "Enter number contact: ";
+        Handler::showContact($object->show(Validator::validateId(rtrim(fgets(STDIN)))));
+    }  elseif (rtrim(strtolower($command)) == 'edit') {
+        $object->edit();
+    } elseif (rtrim(strtolower($command)) == 'show all'){
+        $object->showAll();
+    } elseif (rtrim(strtolower($command)) == 'help'){
+        $object->help();
+    } elseif (rtrim(strtolower($command)) == 'delete'){
+        echo "Enter number contact: ";
+        $id = Validator::validateId(rtrim(fgets(STDIN)));
+        if ($id = $object->delete($id)){
+            echo "Contact $id successfully deleted!\n";
+            echo "\n";
+        };
+    } elseif (rtrim(strtolower($command)) == 'exit'){
+        echo "Close this script.\n";
+        break;
+    } else {
+        echo "Unknown command!\n";
+    }
+}
 
 /*
  * описание задачи:

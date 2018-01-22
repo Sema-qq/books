@@ -33,7 +33,7 @@ class Table
         $this->contacts[] = $contact;
         $this->i++;
 
-        return "Contact $contact->id successfully create!\n\n";
+        return $contact->id;
     }
 
     /**

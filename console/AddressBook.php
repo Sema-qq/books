@@ -7,41 +7,9 @@
 class AddressBook extends Table
 {
     /**
-     * Основной метод класса.
-     */
-    public function run()
-    {
-        //сначала выведем справку
-        $this->help();
-        //затем запустим (почти)бесконечный цикл
-        while (true){
-            echo "Please enter command: ";
-            $command = fgets(STDIN);
-            if (rtrim(strtolower($command)) == 'add'){
-                $this->add();
-            } elseif (rtrim(strtolower($command)) == 'show') {
-                $this->show();
-            }  elseif (rtrim(strtolower($command)) == 'edit') {
-                $this->edit();
-            } elseif (rtrim(strtolower($command)) == 'show all'){
-                $this->showAll();
-            } elseif (rtrim(strtolower($command)) == 'help'){
-                $this->help();
-            } elseif (rtrim(strtolower($command)) == 'delete'){
-                $this->delete();
-            } elseif (rtrim(strtolower($command)) == 'exit'){
-                echo "Close this script.";
-                break;
-            } else {
-                echo "Unknown command!\n";
-            }
-        }
-    }
-
-    /**
      * Вывод справки
      */
-    private function help()
+    public function help()
     {
         echo "\n";
         echo "Available command current script:\n";
@@ -57,39 +25,29 @@ class AddressBook extends Table
 
     /**
      * Добавление контакта
+     * @param string $fio
+     * @param string $phone
+     * @return string id-контакта
      */
-    private function add()
+    public function add($fio, $phone)
     {
-        echo "Please enter F.I.O.: ";
-        $fio = $this->validateFio(rtrim(fgets(STDIN)));
-        echo "Please enter phone: ";
-        $phone = $this->validatePhone(rtrim(fgets(STDIN)));
-        echo $this->create($fio, $phone);
+        return $this->create($fio, $phone);
     }
 
     /**
      * Вывод одного контакта
+     * @param string $id
+     * @return bool|mixed
      */
-    private function show()
+    public function show($id)
     {
-        echo "Enter number contact: ";
-        $contact = $this->findOne($this->validateId(rtrim(fgets(STDIN))));
-
-        if (!empty($contact)){
-            echo "ID:       $contact->id\n";
-            echo "F.I.O.:   $contact->fio.\n";
-            echo "Phone:    $contact->phone.\n";
-            echo "\n";
-        } else {
-            echo "Contact not found\n";
-            echo "\n";
-        }
+        return !empty($id) ? $this->findOne($id) : false;
     }
 
     /**
      * Редактирование одного контакта
      */
-    private function edit()
+    public function edit()
     {
         echo "Enter number contact: ";
         $contact = $this->findOne($this->validateId(rtrim(fgets(STDIN))));
@@ -119,7 +77,7 @@ class AddressBook extends Table
     /**
      * Вывод всех существющих контактов
      */
-    private function showAll()
+    public function showAll()
     {
         $contacts = $this->getAll();
 
@@ -138,15 +96,12 @@ class AddressBook extends Table
 
     /**
      * Удаление контакта
+     * @param string $id
+     * @return bool
      */
-    private function delete()
+    public function delete($id)
     {
-        echo "Enter number contact: ";
-        $id = $this->validateId(rtrim(fgets(STDIN)));
-        if ($this->destroy($id)){
-            echo "Contact $id successfully deleted!\n";
-            echo "\n";
-        };
+        return !empty($id) ? $this->destroy($id) : false;
     }
 
     /**

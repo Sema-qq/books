@@ -34,30 +34,52 @@ $object->help();
 while (true){
     echo "Please enter command: ";
     $command = fgets(STDIN);
+    #добавление контакта
     if (rtrim(strtolower($command)) == 'add'){
         echo "Please enter F.I.O.: ";
         $fio = Validator::validateFio(rtrim(fgets(STDIN)));
         echo "Please enter phone: ";
         $phone = Validator::validatePhone(rtrim(fgets(STDIN)));
         $result = $object->add($fio, $phone);
-        echo $result ? "Contact $result successfully create!\n\n" : "Failure!";
-    } elseif (rtrim(strtolower($command)) == 'show') {
+        echo $result ? "Contact $result successfully create!\n\n" : "Failure!\n";
+    }
+    #вывод одного контакта по id
+    elseif (rtrim(strtolower($command)) == 'show') {
         echo "Enter number contact: ";
         Handler::showContact($object->show(Validator::validateId(rtrim(fgets(STDIN)))));
-    }  elseif (rtrim(strtolower($command)) == 'edit') {
-        $object->edit();
-    } elseif (rtrim(strtolower($command)) == 'show all'){
-        $object->showAll();
-    } elseif (rtrim(strtolower($command)) == 'help'){
+    }
+    #редактирование контакта по id
+    elseif (rtrim(strtolower($command)) == 'edit') {
+        echo "Enter number contact: ";
+        $contact = $object->show(Validator::validateId(rtrim(fgets(STDIN))));
+        if (Handler::showContact($contact)){
+            echo "Please enter F.I.O.: ";
+            $contact->fio = !empty(rtrim(fgets(STDIN))) ? Validator::validateFio(rtrim(fgets(STDIN))) : $contact->fio;
+            echo "Please enter phone: ";
+            $contact->phone = !empty(rtrim(fgets(STDIN))) ? Validator::validatePhone(rtrim(fgets(STDIN))) : $contact->phone;
+            $result = $object->edit($contact);
+            echo $result ? "Contact $result successfully edited!\n\n" : "Failure!\n";
+        }
+    }
+    #вывод всех контактов
+    elseif (rtrim(strtolower($command)) == 'show all'){
+        Handler::showContacts($object->showAll());
+    }
+    #вывод справки
+    elseif (rtrim(strtolower($command)) == 'help'){
         $object->help();
-    } elseif (rtrim(strtolower($command)) == 'delete'){
+    }
+    #удаление контакта по id
+    elseif (rtrim(strtolower($command)) == 'delete'){
         echo "Enter number contact: ";
         $id = Validator::validateId(rtrim(fgets(STDIN)));
         if ($id = $object->delete($id)){
             echo "Contact $id successfully deleted!\n";
             echo "\n";
         };
-    } elseif (rtrim(strtolower($command)) == 'exit'){
+    }
+    #выход из программы
+    elseif (rtrim(strtolower($command)) == 'exit'){
         echo "Close this script.\n";
         break;
     } else {

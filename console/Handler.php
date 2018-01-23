@@ -1,44 +1,56 @@
 <?php
 
+/***
+ * Class Handler
+ */
 class Handler
 {
     /**
-     * @param array $contact
+     * @param object $contact
+     * @return bool
      */
     public static function showContact($contact)
     {
         if (!empty($contact)){
-            foreach ($contact->getAttributeLabels() as $label => $property){
-                echo "$label: $property\n";
-            }
+            self::foreachContact($contact);
         } else {
             self::notContact();
         }
+        return true;
     }
 
     /**
-     * @param array $contacts
+     * @param array objects $contacts
      */
-    public function showContacts($contacts)
+    public static function showContacts($contacts)
     {
         if (!empty($contacts)){
             foreach ($contacts as $contact){
-                $array = $contact->getAttributeLabels();
-                foreach ($array as $label => $property){
-                    echo "$label: $property\n";
-                }
+                self::foreachContact($contact);
             }
         } else {
-            self::notContact();
+            self::notContact('s');
         }
     }
 
     /**
-     * Чтобы не дублировать код
+     * @param string $end
+     * @return bool
      */
-    private static function notContact()
+    private static function notContact($end = '')
     {
-        echo "Contact not found\n";
+        echo "Contact$end not found\n";
         echo "\n";
+        return false;
+    }
+
+    /**
+     * @param object $contact
+     */
+    private static function foreachContact($contact)
+    {
+        foreach ($contact->getAttributeLabels() as $label => $property){
+            echo "$label: $property\n";
+        }
     }
 }

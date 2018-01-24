@@ -12,10 +12,10 @@ class Validator
         while (true){
             //только цифры и не меньше 5 цифр
             if (preg_match('([^0-9]+)', $phone)){
-                echo "Must be only numbers! Please try again enter phone: ";
+                echo "Must be only numbers!\n Please try again enter phone: ";
                 $phone = rtrim(fgets(STDIN));
             } elseif (strlen($phone) < 5){
-                echo "Length 5 characters! Please try again enter phone: ";
+                echo "Length 5 characters!\n Please try again enter phone: ";
                 $phone = rtrim(fgets(STDIN));
             } else { return $phone; }
         }
@@ -31,7 +31,7 @@ class Validator
         while (true){
             //только буквы и цифры
             if (strlen($fio) < 3){
-                echo "Length 3 characters! Please try again enter F.I.O.: ";
+                echo "Length 3 characters!\n Please try again enter F.I.O.: ";
                 $fio = rtrim(fgets(STDIN));
             } else { return $fio; }
         }
@@ -47,7 +47,7 @@ class Validator
         while (true){
             //только цифры
             if (preg_match('([^0-9]+)', $id)){
-                echo "Must be only numbers! Please try again enter number contact: ";
+                echo "Must be only numbers!\n Please try again enter number contact: ";
                 $id = rtrim(fgets(STDIN));
             } else { return $id; }
         }
